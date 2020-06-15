@@ -32,7 +32,7 @@ public class AttendanceController {
 
     @GetMapping(path = "/link/programs")
     public ResponseDTO getConnectedUserPrograms(@RequestHeader("access-token") String accessToken) throws VerificationException {
-       KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+       KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             return service.getLinkedPrograms(accessToken);
 
     }

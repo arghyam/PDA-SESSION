@@ -69,8 +69,8 @@ public class AttesatationServiceImpl implements AttestationService {
     public ResponseDTO getAttestationsForLoggedInUser(String accessToken) {
         boolean isTokenActive = false;
         try {
-            isTokenActive = KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
-            String userId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            isTokenActive = KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
+            String userId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
 
             if (isTokenActive) {
                 List<Attendance> attendanceList = attendanceRepository.findByUserIdAndScannedOut(userId);
@@ -116,8 +116,8 @@ public class AttesatationServiceImpl implements AttestationService {
         LOGGER.info("+++++++++++++++++++++++++++API CALL:/my-attestations-session-info++++++++++++++++++++++++++++++++++");
         boolean isTokenActive = false;
         try {
-            isTokenActive = KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
-            String loggedInUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            isTokenActive = KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
+            String loggedInUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             if (isTokenActive) {
                 List<Attendance> attendanceList = attendanceRepository.findByUserIdAndScannedOut(loggedInUserId);
                 if (null != attendanceList && !attendanceList.isEmpty()) {
@@ -149,8 +149,8 @@ public class AttesatationServiceImpl implements AttestationService {
         LOGGER.info("+++++++++++++++++++++++++++API CALL:/my-attestations-session-info++++++++++++++++++++++++++++++++++");
         boolean isTokenActive = false;
         try {
-            isTokenActive = KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
-            String loggedInUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            isTokenActive = KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
+            String loggedInUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             if (isTokenActive) {
                 List<Attendance> attendanceList = attendanceRepository.findByUserIdAndScannedOut(loggedInUserId);
                 List<Long> sessionIds = attendanceRepository.findSessionIdByUserIdAndScannedOut(loggedInUserId);

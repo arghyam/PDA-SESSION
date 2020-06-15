@@ -22,7 +22,7 @@ public class UserController {
     @GetMapping("/get-user-details")
     public ResponseDTO getUserDetails(@RequestHeader("access-token") String accessToken, @RequestParam("userId") String userId, @RequestParam("topicId") Long topicId) {
         try {
-            KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             return userService.getUserDetailsForActiveUser(userId, topicId, null, false);
         } catch (VerificationException e) {
             return HttpUtils.handleAccessTokenException(e);
@@ -32,7 +32,7 @@ public class UserController {
     @GetMapping("/get-trainee-details")
     public ResponseDTO getUserDetails(@RequestHeader("access-token") String accessToken, @RequestParam("userId") String userId) {
         try {
-            KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             return userService.getUserDetailsForActiveUser(userId, null, null, false);
         } catch (VerificationException e) {
             return HttpUtils.handleAccessTokenException(e);

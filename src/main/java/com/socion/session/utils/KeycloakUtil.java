@@ -15,12 +15,9 @@ public class KeycloakUtil {
 
     protected static Logger logger = LoggerFactory.getLogger(KeycloakUtil.class);
 
-        private static String publicKeyString = "";
-
-
-    public static String fetchUserIdFromToken(String accessToken, String baseUrl, String realm) throws VerificationException {
+    public static String fetchUserIdFromToken(String accessToken, String baseUrl, String realm,String keycloakPublicKey) throws VerificationException {
         try {
-            PublicKey publicKey = toPublicKey(publicKeyString);
+            PublicKey publicKey = toPublicKey(keycloakPublicKey);
             AccessToken token = RSATokenVerifier.verifyToken(accessToken, publicKey, baseUrl + "realms/" + realm);
             return token.getSubject();
         }
@@ -30,9 +27,9 @@ public class KeycloakUtil {
         }
     }
 
-    public static Boolean verifyToken(String accessToken, String baseUrl, String realm) throws VerificationException {
+    public static Boolean verifyToken(String accessToken, String baseUrl, String realm,String keycloakPublicKey) throws VerificationException {
         try {
-            PublicKey publicKey = toPublicKey(publicKeyString);
+            PublicKey publicKey = toPublicKey(keycloakPublicKey);
             AccessToken token = RSATokenVerifier.verifyToken(accessToken, publicKey, baseUrl + "realms/" + realm);
             return token.isActive();
         }

@@ -98,8 +98,8 @@ public class AttendanceServiceImpl implements AttendanceService {
         LOGGER.info("scan-time {}", attendanceDTO.getTime());
         boolean isTokenActive = false;
         try {
-            isTokenActive = KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
-            String loggedInUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            isTokenActive = KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
+            String loggedInUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             if (isTokenActive) {
                 return attendanceDTO.isScanIn() ? scanIn(loggedInUserId, attendanceDTO) : scanOut(loggedInUserId, attendanceDTO);
             }
@@ -253,7 +253,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             String attestationUrl = generateAttestation(session, user, Constants.TRAINEE, attendanceDTO);
             //TODO move s3 url to props
             if (attestationUrl == null) {
-                attestationUrl = "{S3 url}/attestation/" + session.getId() + Constants.TRAINEE + user.getUserId();
+                attestationUrl = appContext.getAwsS3Url()+"attestation/" + session.getId() + Constants.TRAINEE + user.getUserId();
             }
             LOGGER.info("attestation URL: {} for session id: {}", attestationUrl, attendanceDTO.getSessionId());
             Attendance attendanceOutput = transformToEntity(attendance, dateTime, userId, attendanceDTO, null, attestationUrl);
@@ -520,7 +520,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         ResponseDTO response = new ResponseDTO();
         List<LinkedProgramsDTO> linkedProgramsList = new ArrayList<>();
         try {
-            String callingUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            String callingUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             List<Long> sessionIds = attendanceRepository.findDistinctSessionIdByUserIdAndScannedOut(callingUserId);
             List<BigInteger> topicIds = sessionRepository.findByTopicIdList(sessionIds);
             Call<ResponseDTO> topicRequest = entityDao.getPrograms(topicIds);

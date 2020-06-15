@@ -26,7 +26,7 @@ public class NotificationController {
     @GetMapping("/unReadCount")
     public ResponseDTO getUnreadCount(@RequestHeader("access-token") String accessToken) {
         try {
-            return notificationService.getUnreadCount(KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm()));
+            return notificationService.getUnreadCount(KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey()));
         } catch (VerificationException e) {
             return HttpUtils.handleAccessTokenException(e);
         }
@@ -40,7 +40,7 @@ public class NotificationController {
     @PutMapping("/status")
     public ResponseDTO updateStatus(@RequestHeader("access-token") String accessToken, @RequestBody NotificationStatusDTO notificationStatus) {
         try {
-            return notificationService.updateNotificationStatus(KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm()), notificationStatus);
+            return notificationService.updateNotificationStatus(KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey()), notificationStatus);
         } catch (VerificationException e) {
             return HttpUtils.handleAccessTokenException(e);
         }
@@ -49,7 +49,7 @@ public class NotificationController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseDTO getNotifications(@RequestHeader("access-token") String accessToken, @RequestHeader("offset") Long offset, @RequestParam("pageSize") Integer pageSize, @RequestParam("pageNumber") Integer pageNumber) {
         try {
-            return notificationService.getNotifications(KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm()), pageSize, pageNumber, offset);
+            return notificationService.getNotifications(KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey()), pageSize, pageNumber, offset);
         } catch (VerificationException e) {
             return HttpUtils.handleAccessTokenException(e);
         }

@@ -1132,7 +1132,7 @@ public class SessionServiceImplV2 implements SessionServiceV2 {
     public ResponseDTO getCompleteSessionInfoForAttestation(Long sessionId, String accessToken, String role) throws
             IOException, org.keycloak.common.VerificationException {
         Session session = sessionRepository.findById(sessionId).get();
-        String loogedInUserID = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+        String loogedInUserID = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
         Attendance attendance = attendanceRepository.findByUserIdAndSessionId(loogedInUserID, sessionId, role);
         SessionOldDtoV2 sessionOldDtoV2 = attesatationService.getCompleteSessionInfoForAttestation(session, loogedInUserID, attendance);
         return HttpUtils.success(sessionOldDtoV2, Constants.SUCESSFULLY_FETCHED_SESSIONS);
@@ -1143,7 +1143,7 @@ public class SessionServiceImplV2 implements SessionServiceV2 {
             role) throws
             IOException, org.keycloak.common.VerificationException {
         Session session = sessionRepository.findById(sessionId).get();
-        String loogedInUserID = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+        String loogedInUserID = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
         Attendance attendance = attendanceRepository.findByUserIdAndSessionId(loogedInUserID, sessionId, role);
         List<BigInteger> topicIds = new ArrayList<>();
         topicIds.add(BigInteger.valueOf(session.getTopicId()));

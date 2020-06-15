@@ -51,17 +51,17 @@ public class AttestationController {
 
     }
 
-    @GetMapping("/my-attestations-session-info")
+    @GetMapping("/get-session-info-attestation-optimized")
     public ResponseDTO getAttestationswithsessionInfoForLoggedInUserOptimized(@RequestHeader("access-token") String accessToken) throws IOException {
         return attestationService.getAttestationsWithSessionInfoForLoggedInUserOptimized(accessToken);
 
     }
 
 
-    @GetMapping("/get-session-info-attestation-optimized")
+    @GetMapping("/my-attestations-session-info")
     public ResponseDTO getCompleteSessionInformation(@RequestHeader("access-token") String accessToken, @RequestParam("sessionId") Long sessionId, @RequestParam("role") String role) throws ParseException, IOException {
         try {
-            boolean isTokenActive = KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            boolean isTokenActive = KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
 
             if (isTokenActive) {
                 return sessionService.getCompleteSessionInfoForAttestation(sessionId, accessToken, role);
@@ -79,7 +79,7 @@ public class AttestationController {
     @GetMapping("/get-session-info-attestation")
     public ResponseDTO getCompleteSessionInformationOptimized(@RequestHeader("access-token") String accessToken, @RequestParam("sessionId") Long sessionId, @RequestParam("role") String role) throws ParseException, IOException {
         try {
-            boolean isTokenActive = KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            boolean isTokenActive = KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
 
             if (isTokenActive) {
                 return sessionService.getCompleteSessionInfoForAttestationOptimized(sessionId, accessToken, role);

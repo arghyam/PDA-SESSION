@@ -45,7 +45,7 @@ public class SessionControllerV2 {
     @GetMapping("/{id}")
     public ResponseDTO getSession(@RequestHeader("access-token") String accessToken, @PathVariable("id") Long id) {
         try {
-            KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             return sessionService.getSession(id);
         } catch (VerificationException exception) {
             return HttpUtils.handleAccessTokenException(exception);
@@ -56,7 +56,7 @@ public class SessionControllerV2 {
     public ResponseDTO createSession(@RequestHeader("access-token") String accessToken, @Validated @RequestBody SessionOldDtoV2 sessionOldDTO, BindingResult bindingResult) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            String userId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            String userId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             sessionOldDTO.setSessionCreator(userId);
             responseDTO = sessionService.createSession(sessionOldDTO, bindingResult);
         } catch (VerificationException exception) {
@@ -68,7 +68,7 @@ public class SessionControllerV2 {
     @PutMapping("/update")
     public ResponseDTO updateSession(@RequestHeader("access-token") String accessToken, @Validated @RequestBody SessionOldDtoV2 sessionOldDTO, BindingResult bindingResult) {
         try {
-            String callingUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            String callingUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             return sessionService.updateSession(sessionOldDTO, bindingResult, callingUserId);
         } catch (VerificationException e) {
             return HttpUtils.handleAccessTokenException(e);
@@ -78,7 +78,7 @@ public class SessionControllerV2 {
     @PostMapping("/member/add")
     public ResponseDTO addMemberToSession(@RequestHeader("access-token") String accessToken, @RequestBody MemberOldDtoV2 memberOldDtoV2) throws IOException {
         try {
-            String callingUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            String callingUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             return sessionService.addSessionUser(memberOldDtoV2, callingUserId);
         } catch (VerificationException e) {
             return HttpUtils.handleAccessTokenException(e);
@@ -88,7 +88,7 @@ public class SessionControllerV2 {
     @PutMapping("/member/update")
     public ResponseDTO updateSessionMemberRole(@RequestHeader("access-token") String accessToken, @RequestBody MemberOldDtoV2 memberOldDtoV2) {
         try {
-            String callingUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            String callingUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             return sessionService.updateSessionUser(memberOldDtoV2, callingUserId);
         } catch (VerificationException e) {
             return HttpUtils.handleAccessTokenException(e);
@@ -99,7 +99,7 @@ public class SessionControllerV2 {
     public ResponseDTO deleteSessionMember(@RequestHeader("access-token") String accessToken, @RequestParam("userId") String userIds, @RequestParam("sessionId") Long sessionId) {
         try {
 
-            String callingUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            String callingUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             return sessionService.deleteSessionUser(userIds, sessionId, callingUserId);
         } catch (VerificationException e) {
             return HttpUtils.handleAccessTokenException(e);
@@ -109,7 +109,7 @@ public class SessionControllerV2 {
     @DeleteMapping("/member/remove-multiple")
     public ResponseDTO deleteMutipleSessionMember(@RequestHeader("access-token") String accessToken, @RequestParam List<String> userIds, @RequestParam("sessionId") Long sessionId) {
         try {
-            KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             return sessionService.deleteSessionMultipleUser(userIds, sessionId);
         } catch (VerificationException e) {
             return HttpUtils.handleAccessTokenException(e);
@@ -119,7 +119,7 @@ public class SessionControllerV2 {
     @DeleteMapping("/delete/{id}")
     public ResponseDTO deleteSession(@RequestHeader("access-token") String accessToken, @PathVariable("id") Long id) {
         try {
-            KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             return sessionService.deleteSession(id);
         } catch (VerificationException e) {
             return HttpUtils.handleAccessTokenException(e);
@@ -129,7 +129,7 @@ public class SessionControllerV2 {
     @GetMapping(value = "/list")
     public ResponseDTO getAllSessionsForUser(@RequestHeader("access-token") String accessToken) {
         try {
-            String userId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            String userId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             return sessionService.getAllSessionsForUser(userId);
         } catch (VerificationException exception) {
             return HttpUtils.handleAccessTokenException(exception);
@@ -140,7 +140,7 @@ public class SessionControllerV2 {
     public ResponseDTO getSessionUserDetails(@RequestHeader("access-token") String accessToken, @RequestParam("sessionId") Long sessionId) {
         try {
 
-            String callingUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            String callingUserId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             return sessionService.getSessionUserDetailsBySessionId(sessionId, callingUserId);
         } catch (VerificationException e) {
             return HttpUtils.handleAccessTokenException(e);
@@ -151,7 +151,7 @@ public class SessionControllerV2 {
     @GetMapping("/get-complete-session-information/{id}")
     public ResponseDTO getCompleteSessionInformation(@RequestHeader("access-token") String accessToken, @PathVariable("id") Long sessionId) throws ParseException, IOException {
         try {
-            String userId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            String userId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             return sessionService.getCompleteSessionInfo(sessionId, accessToken, userId);
         } catch (VerificationException e) {
             return HttpUtils.handleAccessTokenException(e);
@@ -163,7 +163,7 @@ public class SessionControllerV2 {
     public ResponseDTO getTopic(@RequestHeader("access-token") String accessToken, @PathVariable("id") Long topicId) throws IOException {
         try {
 
-            String userId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            String userId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             ResponseDTO responseDTO = userService.getUserDetailsForActiveUser(userId, topicId, userId, false);
             ScanMemberDetailsDto scanMemberDetailsDto = (ScanMemberDetailsDto) responseDTO.getResponse();
 
@@ -212,7 +212,7 @@ public class SessionControllerV2 {
     @PostMapping("link/{sessionId}")
     public ResponseDTO addSessionLinks(@RequestHeader("access-token") String accessToken, @Validated @RequestBody SessionAdditionalLinksDTO additionalLinksDTO, BindingResult bindingResult, @PathVariable("sessionId") Long sessionId) {
         try {
-            KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             return sessionService.addSessionUrl(sessionId, additionalLinksDTO, bindingResult);
         } catch (VerificationException e) {
             return HttpUtils.handleAccessTokenException(e);
@@ -223,7 +223,7 @@ public class SessionControllerV2 {
     @DeleteMapping("/link/{sessionId}/{linkId}")
     public ResponseDTO deleteSessionLinks(@RequestHeader("access-token") String accessToken, @PathVariable("linkId") Long sessionUrlId, @PathVariable("sessionId") Long sessionId) {
         try {
-            String userId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
+            String userId = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
             return sessionService.deleteSessionUrl(sessionId, userId, sessionUrlId);
         } catch (VerificationException e) {
             return HttpUtils.handleAccessTokenException(e);
