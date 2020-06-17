@@ -45,7 +45,7 @@ public class AttestationController {
     }
 
 
-    @GetMapping("/my-attestations-session-info-optimized")
+    @GetMapping("/my-attestations-session-info")
     public ResponseDTO getAttestationswithsessionInfoForLoggedInUser(@RequestHeader("access-token") String accessToken) throws IOException {
         return attestationService.getAttestationsWithSessionInfoForLoggedInUser(accessToken);
 
@@ -58,7 +58,7 @@ public class AttestationController {
     }
 
 
-    @GetMapping("/my-attestations-session-info")
+    @GetMapping("/my-attestations-session-info-optimized")
     public ResponseDTO getCompleteSessionInformation(@RequestHeader("access-token") String accessToken, @RequestParam("sessionId") Long sessionId, @RequestParam("role") String role) throws ParseException, IOException {
         try {
             boolean isTokenActive = KeycloakUtil.verifyToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm(),appContext.getKeycloakPublickey());
