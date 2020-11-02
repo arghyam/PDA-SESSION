@@ -35,6 +35,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.springframework.scheduling.annotation.Scheduled;
 
 @Component
 public class MemberAttestationScheduler {
@@ -87,7 +88,7 @@ public class MemberAttestationScheduler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MemberAttestationScheduler.class);
 
-    //@Scheduled(cron = "0 0/30 * * * ?", zone = "UTC")
+   @Scheduled(cron = "0 0/30 * * * ?", zone = "UTC")
    public void reportCurrentTime() throws IOException, MessagingException {
 
         Cronlogsdao cronlogsdao = new Cronlogsdao();

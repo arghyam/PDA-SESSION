@@ -250,7 +250,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             String attestationUrl = generateAttestation(session, user, Constants.TRAINEE, attendanceDTO);
             //TODO move s3 url to props
             if (attestationUrl == null) {
-                attestationUrl = appContext.getAwsS3Url()+"attestation/" + session.getId() + Constants.TRAINEE + user.getUserId();
+                attestationUrl = appContext.getAwsS3UrlPrivate()+"attestation/" + session.getId() + Constants.TRAINEE + user.getUserId();
             }
             LOGGER.info("attestation URL: {} for session id: {}", attestationUrl, attendanceDTO.getSessionId());
             Attendance attendanceOutput = transformToEntity(attendance, dateTime, userId, attendanceDTO, null, attestationUrl);

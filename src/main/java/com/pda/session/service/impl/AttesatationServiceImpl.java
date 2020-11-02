@@ -157,7 +157,10 @@ public class AttesatationServiceImpl implements AttestationService {
                 List<BigInteger> topicIds = new ArrayList<>(allDistinctTopicIds);
 
                 List<TopicInfo> topicIdsData = null;
-                Call<List<TopicInfo>> userRequest = entityDao.multipleTopicDetailWithProgramContentDTO(topicIds);
+           TopicIdsDTO topicIdsDTO = new TopicIdsDTO();
+                topicIdsDTO.setTopicIds(topicIds);
+                Call<List<TopicInfo>> userRequest = entityDao.multipleTopicDetailWithProgramContentDTO(topicIdsDTO);   
+	//	Call<List<TopicInfo>> userRequest = entityDao.multipleTopicDetailWithProgramContentDTO(topicIds);
                 retrofit2.Response userResponse = userRequest.execute();
                 if (!userResponse.isSuccessful()) {
                     LOGGER.error("unable to fetch Content And Program details {}", userResponse.errorBody().string());

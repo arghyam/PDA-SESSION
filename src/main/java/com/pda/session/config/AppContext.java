@@ -39,6 +39,8 @@ public class AppContext {
     @Value("${session-qr-code-path}")
     private String sessionQrCodePath;
 
+    @Value("${aws-s3-bucket-name-private}")
+    private String awsS3BucketNamePrivate;
 
     @Value("${aws-s3-url}")
     private String awsS3Url;
@@ -133,7 +135,8 @@ public class AppContext {
 
     @Value("${session-end-minutes}")
     private Integer sessionEndMinutes;
-
+    @Value("${aws-s3-url-private}")
+    private String awsS3UrlPrivate;
 
     public String getIamBaseUrl() {
         return iamBaseUrl;
@@ -307,4 +310,20 @@ public class AppContext {
     public void setSessionEndMinutes(Integer sessionEndMinutes) {
         this.sessionEndMinutes = sessionEndMinutes;
     }
+    public String getAwsS3BucketNamePrivate() {
+        return awsS3BucketNamePrivate;
+    }
+
+    public void setAwsS3BucketNamePrivate(String awsS3BucketNamePrivate) {
+        this.awsS3BucketNamePrivate = awsS3BucketNamePrivate;
+    }
+
+    public String getAwsS3UrlPrivate() {
+        return awsS3UrlPrivate;
+    }
+
+    public void setAwsS3UrlPrivate(String awsS3UrlPrivate) {
+        this.awsS3UrlPrivate = awsS3UrlPrivate;
+    }
+
 }

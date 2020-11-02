@@ -1,5 +1,5 @@
 package com.pda.session.facade;
-
+import com.pda.session.dto.v2.TopicIdsDTO;
 import com.pda.session.dto.v2.TopicInfo;
 import com.pda.session.dto.CleverTapEventData;
 import com.pda.session.dto.ResponseDTO;
@@ -25,7 +25,7 @@ public interface EntityDao {
 
     @POST("topic/details")
     @Headers("Content-Type:application/json")
-    Call<List<TopicInfo>> multipleTopicDetailWithProgramContentDTO(@Query("topicIds") List<BigInteger> topicIds) throws IOException;
+    Call<List<TopicInfo>> multipleTopicDetailWithProgramContentDTO(@Body TopicIdsDTO topicIdsDTO) throws IOException;
 
     @GET("private/topic/list")
     @Headers("Content-Type:application/json")

@@ -1148,7 +1148,10 @@ public class SessionServiceImplV2 implements SessionServiceV2 {
         List<BigInteger> topicIds = new ArrayList<>();
         topicIds.add(BigInteger.valueOf(session.getTopicId()));
         List<TopicInfo> topicIdsData = null;
-        Call<List<TopicInfo>> userRequest = entityDao.multipleTopicDetailWithProgramContentDTO(topicIds);
+         TopicIdsDTO topicIdsDTO = new TopicIdsDTO();
+        topicIdsDTO.setTopicIds(topicIds);
+        Call<List<TopicInfo>> userRequest = entityDao.multipleTopicDetailWithProgramContentDTO(topicIdsDTO);
+	//Call<List<TopicInfo>> userRequest = entityDao.multipleTopicDetailWithProgramContentDTO(topicIds);
         retrofit2.Response userResponse = userRequest.execute();
         if (!userResponse.isSuccessful()) {
             LOGGER.error("unable to fetch Content And Program details {}", userResponse.errorBody().string());
