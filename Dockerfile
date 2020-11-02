@@ -9,6 +9,6 @@ ADD ./settings.gradle    settings.gradle
 COPY ./src/main/resources/templates /etc/templates
 RUN gradle clean build -x test
 
-ENTRYPOINT ["java","-jar", "./build/libs/socion-session-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=uat"]
+ENTRYPOINT ["java","-jar", "./build/libs/pda-session-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=uat"]
 
 
