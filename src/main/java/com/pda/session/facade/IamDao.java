@@ -15,11 +15,9 @@ import java.util.List;
 @Repository
 public interface IamDao {
 
-    @GET("private/detail")
+    @GET("private/details/{userId}")
     @Headers("Content-Type:application/json")
-    Call<RegistryUserWithOsId> getUser(@Query("callingUserId") String loggedInUserId,@Path("userId") String userId) throws IOException;
-
-    //Call<RegistryUserWithOsId> getUser(@Query("callingUserId") String loggedInUserId,@Query("userId") String userId) throws IOException;
+    Call<RegistryUserWithOsId> getUser(@Path("userId") String userId,@Query("callingUserId") String loggedInUserId) throws IOException;
 
     @GET("private/details/list")
     @Headers("Content-Type:application/json")
