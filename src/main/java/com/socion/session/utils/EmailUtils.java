@@ -13,6 +13,13 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Properties;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 
 
 public class EmailUtils {
@@ -45,7 +52,12 @@ public class EmailUtils {
         LOGGER.debug("Sending email to the user {}", "");
 
 
-        String emailContent = new String(Files.readAllBytes(Paths.get(appContext.getCronEmailPath())));
+        Resource resource = new ClassPathResource(appContext.getCronEmailPath());
+        InputStream input = resource.getInputStream();
+        String emailContent = new BufferedReader(
+        new InputStreamReader(input, StandardCharsets.UTF_8))
+        .lines()
+       .collect(Collectors.joining("\n"));
 
         emailContent = emailContent.replace("$timezones", timeZones);
         emailContent = emailContent.replace("$date", LocalDate.now().toString());

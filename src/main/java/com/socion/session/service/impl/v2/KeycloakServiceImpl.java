@@ -33,7 +33,7 @@ public class KeycloakServiceImpl implements KeycloakService {
         LOGGER.debug("Generating access Token for user : {} ", username);
         try {
             adminAccessTokenResponse = keycloakDao.generateAccessTokenUsingCredentials(appContext.getRealm(), appContext.getAdminUserName(),
-                    appContext.getAdminUserpassword(), appContext.getClientId(), appContext.getGrantType(), null).execute().body();
+                    appContext.getAdminUserpassword(), appContext.getClientId(), appContext.getGrantType(), appContext.getClientSecret()).execute().body();
         } catch (IOException e) {
             LOGGER.error(Constants.ERRORLOG, e);
         }

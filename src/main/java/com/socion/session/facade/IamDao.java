@@ -7,6 +7,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Query;
+import retrofit2.http.Path;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,9 +15,9 @@ import java.util.List;
 @Repository
 public interface IamDao {
 
-    @GET("private/detail")
+    @GET("private/details/{userId}")
     @Headers("Content-Type:application/json")
-    Call<RegistryUserWithOsId> getUser(@Query("callingUserId") String loggedInUserId,@Query("userId") String userId) throws IOException;
+    Call<RegistryUserWithOsId> getUser(@Path("userId") String userId) throws IOException;
 
     @GET("private/details/list")
     @Headers("Content-Type:application/json")

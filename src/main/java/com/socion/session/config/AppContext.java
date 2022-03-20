@@ -33,7 +33,7 @@ public class AppContext {
     @Value("${aws-s3-bucket-name}")
     private String awsS3BucketName;
 
-    @Value("${aws-s3-region}")
+    @Value("${aws-region}")
     private String awsS3Region;
 
     @Value("${session-qr-code-path}")
@@ -87,6 +87,9 @@ public class AppContext {
 
     @Value("${keycloak-client-id}")
     private String clientId;
+
+    @Value("${keycloak.credentials.secret}")
+    private String clientSecret;
 
     @Value("${client.granttype}")
     private String grantType;
@@ -306,5 +309,12 @@ public class AppContext {
 
     public void setSessionEndMinutes(Integer sessionEndMinutes) {
         this.sessionEndMinutes = sessionEndMinutes;
+    }
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getClientSecret() {
+        return clientSecret;
     }
 }

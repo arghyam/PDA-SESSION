@@ -142,7 +142,7 @@ public class MemberAttestationScheduler {
             for (SessionRole role : sessionroles) {
                 Session session = sessionRepository.findByIds(role.getSession().getId());
                 try {
-                    Call<RegistryUserWithOsId> userRequest = iamDao.getUser("null",role.getUserId());
+                    Call<RegistryUserWithOsId> userRequest = iamDao.getUser(role.getUserId());
                     retrofit2.Response<RegistryUserWithOsId> userResponse = userRequest.execute();
                     if (!userResponse.isSuccessful()) {
                         LOGGER.error("unable to fetch user details {}", userResponse.errorBody().string());

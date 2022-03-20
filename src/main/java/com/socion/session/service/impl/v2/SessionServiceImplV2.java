@@ -1,5 +1,7 @@
 package com.socion.session.service.impl.v2;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import com.socion.session.aws.AwsConfigService;
 import com.socion.session.config.AppContext;
@@ -52,6 +54,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 @Service
@@ -185,6 +192,7 @@ public class SessionServiceImplV2 implements SessionServiceV2 {
 
     private ResponseDTO generateQrCodeforsession(Long sessionId, String sessionName, String time, String qrType, String name, String sessionTimeZone) throws IOException, ParseException {
         String sessionNameReformatted = sessionName.replace(" ", "-");
+	String tempDirectoryPath = System.getProperty("java.io.tmpdir");
         boolean value = new File(appContext.getSessionQrCodePath() + Constants.QR_CODES).mkdir();
         JSONObject obj = new JSONObject();
         String sessionName1;
@@ -231,8 +239,13 @@ public class SessionServiceImplV2 implements SessionServiceV2 {
         String tobeencrypted = obj.toString();
         LOGGER.info("SESSIONTIMEZONE:{}", sessionTimeZone);
         LOGGER.info("====================encrypted format=============== {}", tobeencrypted);
-        LOGGER.info(appContext.getSessionQrCodePath() + "SessionQRcode.html");
-        String htmlString = new String(Files.readAllBytes(Paths.get(appContext.getSessionQrCodePath() + "SessionQRcode.html")));
+        LOGGER.info(appContext.getSessionQrCodePath());
+        Resource resource = new ClassPathResource("templates/SessionQRcode.html");
+        InputStream input = resource.getInputStream();
+        String htmlString = new BufferedReader(
+                new InputStreamReader(input, StandardCharsets.UTF_8))
+                .lines()
+                .collect(Collectors.joining("\n"));
         AesUtil aesUtil = new AesUtil(appContext.getKeySize(), appContext.getIterationCount());
         String encryptedSessionData = aesUtil.encrypt(appContext.getSaltValue(), appContext.getIvValue(),
                 appContext.getSecretKey(), tobeencrypted);
@@ -1145,23 +1158,34 @@ public class SessionServiceImplV2 implements SessionServiceV2 {
         Session session = sessionRepository.findById(sessionId).get();
         String loogedInUserID = KeycloakUtil.fetchUserIdFromToken(accessToken, appContext.getKeyCloakServiceUrl(), appContext.getRealm());
         Attendance attendance = attendanceRepository.findByUserIdAndSessionId(loogedInUserID, sessionId, role);
-        List<BigInteger> topicIds = new ArrayList<>();
-        topicIds.add(BigInteger.valueOf(session.getTopicId()));
-        List<TopicInfo> topicIdsData = null;
-        Call<List<TopicInfo>> userRequest = entityDao.multipleTopicDetailWithProgramContentDTO(topicIds);
+        List<Long> topicIds = new ArrayList<>();
+        topicIds.add(session.getTopicId());
+        TopicIdsDTO topicIdsDTO = new TopicIdsDTO();
+        topicIdsDTO.setTopicIds(topicIds);
+        List<Map<String,Object>> topicIdsData = null;
+        Call<ResponseDTO> userRequest = entityDao.multipleTopicDetailWithProgramContentDTO(topicIdsDTO);
         retrofit2.Response userResponse = userRequest.execute();
         if (!userResponse.isSuccessful()) {
             LOGGER.error("unable to fetch Content And Program details {}", userResponse.errorBody().string());
         } else {
-            topicIdsData = (List<TopicInfo>) userResponse.body();
+             ResponseDTO responseDTO = (ResponseDTO) userResponse.body();
+            topicIdsData = (List<Map<String,Object>>) responseDTO.getResponse();
         }
         List<String> allUserIdsRelatedToSession = sessionRoleRepository.findUserIdOfMembersRelatedToSession(Arrays.asList(sessionId));
         ResponseDTO responseDTO = userService.getAllUserDetails(allUserIdsRelatedToSession, loogedInUserID, false);
         if (responseDTO.getResponseCode() != HttpStatus.OK.value()) {
             return HttpUtils.onFailure(HttpStatus.NOT_FOUND.value(), "Error while fetching user Details");
         }
+	List<TopicInfo> topicInfoList = new ArrayList<>();
+        ObjectMapper objectMapper=new ObjectMapper();
+        topicIdsData.forEach(element -> {
+            element.forEach((k,v) -> {
+                LinkedHashMap linkedHashMap = (LinkedHashMap) v;
+                topicInfoList.add(objectMapper.convertValue(linkedHashMap, TopicInfo.class));
+            });
+        });
 
-        SessionOldDtoV2 sessionOldDtoV2 = attesatationService.getCompleteSessionInfoForAttestationOptimized(session, loogedInUserID, attendance, topicIdsData, (List<RegistryUserWithOsId>) responseDTO.getResponse());
+        SessionOldDtoV2 sessionOldDtoV2 = attesatationService.getCompleteSessionInfoForAttestationOptimized(session, loogedInUserID, attendance, topicInfoList, (List<RegistryUserWithOsId>) responseDTO.getResponse());
         return HttpUtils.success(sessionOldDtoV2, Constants.SUCESSFULLY_FETCHED_SESSIONS);
     }
 

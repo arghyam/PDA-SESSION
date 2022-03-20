@@ -1,5 +1,7 @@
 package com.socion.session.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import com.socion.session.config.AppContext;
 import com.socion.session.dao.Attendance;
@@ -155,15 +157,18 @@ public class AttesatationServiceImpl implements AttestationService {
                 List<Attendance> attendanceList = attendanceRepository.findByUserIdAndScannedOut(loggedInUserId);
                 List<Long> sessionIds = attendanceRepository.findSessionIdByUserIdAndScannedOut(loggedInUserId);
                 List<BigInteger> allDistinctTopicIds = sessionRepository.findByTopicIdList(sessionIds);
-                List<BigInteger> topicIds = new ArrayList<>(allDistinctTopicIds);
-
-                List<TopicInfo> topicIdsData = null;
-                Call<List<TopicInfo>> userRequest = entityDao.multipleTopicDetailWithProgramContentDTO(topicIds);
+                 List<Long> topicIds = new ArrayList<>();
+                allDistinctTopicIds.forEach(topicId -> topicIds.add(topicId.longValue()));
+                TopicIdsDTO topicIdsDTO = new TopicIdsDTO();
+                topicIdsDTO.setTopicIds(topicIds);
+                List<Map<String,Object>> topicIdsData = null;
+                Call<ResponseDTO> userRequest = entityDao.multipleTopicDetailWithProgramContentDTO(topicIdsDTO);
                 retrofit2.Response userResponse = userRequest.execute();
                 if (!userResponse.isSuccessful()) {
                     LOGGER.error("unable to fetch Content And Program details {}", userResponse.errorBody().string());
                 } else {
-                    topicIdsData = (List<TopicInfo>) userResponse.body();
+                     ResponseDTO responseDTO = (ResponseDTO) userResponse.body();
+            topicIdsData = (List<Map<String,Object>>) responseDTO.getResponse();
                 }
 
                 if (null != attendanceList && !attendanceList.isEmpty()) {
@@ -181,9 +186,17 @@ public class AttesatationServiceImpl implements AttestationService {
                     }
                     List<RegistryUserWithOsId> userDetails = (List<RegistryUserWithOsId>) responseDTO.getResponse();
 
+		    List<TopicInfo> topicInfoList = new ArrayList<>();
+		    ObjectMapper objectMapper=new ObjectMapper();
+                    topicIdsData.forEach(element -> {
+                        element.forEach((k,v) -> {
+                            LinkedHashMap linkedHashMap = (LinkedHashMap) v;
+                            topicInfoList.add(objectMapper.convertValue(linkedHashMap, TopicInfo.class));
+                        });
+                    });
                     for (Attendance attendance : attendanceList) {
                         if(sessionMap.get(attendance.getSessionId()) != null) {
-                            sessionOldDtos.add(getCompleteSessionInfoForAttestationOptimized(sessionMap.get(attendance.getSessionId()), loggedInUserId, attendance, topicIdsData, userDetails));
+                            sessionOldDtos.add(getCompleteSessionInfoForAttestationOptimized(sessionMap.get(attendance.getSessionId()), loggedInUserId, attendance, topicInfoList, userDetails));
                         }
                     }
                     return HttpUtils.success(sessionOldDtos, "Returning list of Attestations");

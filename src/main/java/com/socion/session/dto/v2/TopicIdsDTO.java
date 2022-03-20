@@ -4,13 +4,13 @@ import java.math.BigInteger;
 import java.util.List;
 
 public class TopicIdsDTO {
-    List<BigInteger> topicIds;
+    List<Long> topicIds;
 
-    public List<BigInteger> getTopicIds() {
+    public List<Long> getTopicIds() {
         return topicIds;
     }
 
-    public void setTopicIds(List<BigInteger> topicIds) {
+    public void setTopicIds(List<Long> topicIds) {
         this.topicIds = topicIds;
     }
 }

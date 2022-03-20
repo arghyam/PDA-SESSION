@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     public ResponseDTO getUserDetails(String userId, String loggedInUserId, boolean piiFilter) throws IOException {
 
         User user = null;
-        Call<RegistryUserWithOsId> userRequest = iamDao.getUser(loggedInUserId==null?"null":loggedInUserId,userId);
+        Call<RegistryUserWithOsId> userRequest = iamDao.getUser(userId);
         retrofit2.Response userResponse = userRequest.execute();
         if (!userResponse.isSuccessful()) {
             LOGGER.error("unable to fetch user details {}", userResponse.errorBody().string());
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
         SessionRole sessionRole1 = new SessionRole();
         sessionRole1.setUserId(userId);
         try {
-            Call<RegistryUserWithOsId> userRequest = iamDao.getUser(loggedInUserId==null?"null":loggedInUserId,userId);
+            Call<RegistryUserWithOsId> userRequest = iamDao.getUser(userId);
             retrofit2.Response userResponse = userRequest.execute();
             Boolean isEligible = Boolean.FALSE;
             if(topicId!=null){

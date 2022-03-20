@@ -4,6 +4,7 @@ import com.socion.session.dto.CleverTapEventData;
 import com.socion.session.dto.ResponseDTO;
 import com.socion.session.dto.TemplateDto;
 import com.socion.session.dto.v2.TopicDTO;
+import com.socion.session.dto.v2.TopicIdsDTO;
 import com.socion.session.dto.v2.TopicInfo;
 import com.socion.session.dto.v2.TopicSessionLinkedDTO;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,7 @@ import retrofit2.http.*;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface EntityDao {
@@ -25,7 +27,7 @@ public interface EntityDao {
 
     @POST("topic/details")
     @Headers("Content-Type:application/json")
-    Call<List<TopicInfo>> multipleTopicDetailWithProgramContentDTO(@Query("topicIds") List<BigInteger> topicIds) throws IOException;
+    Call<ResponseDTO> multipleTopicDetailWithProgramContentDTO(@Body TopicIdsDTO topicIdsDTOs) throws IOException;
 
     @GET("private/topic/list")
     @Headers("Content-Type:application/json")
