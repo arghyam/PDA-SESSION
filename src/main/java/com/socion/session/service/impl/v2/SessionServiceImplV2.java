@@ -1,5 +1,5 @@
 package com.socion.session.service.impl.v2;
-
+// This change had to be done since the API was broken
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
