@@ -308,3 +308,8 @@ public class AppContext {
         this.sessionEndMinutes = sessionEndMinutes;
     }
 }
+
+/** Here we have 2 changes
+*1. Incorrect configurable property name for AWS region which has been fixed
+*2. Adding keycloak client secret as a configurable property.
+/* 
