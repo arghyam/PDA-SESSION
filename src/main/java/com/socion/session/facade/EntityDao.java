@@ -67,3 +67,5 @@ public interface EntityDao {
 
 
 }
+
+// This change had to be done since the API using the DTO was broken and this is part of the fix.
