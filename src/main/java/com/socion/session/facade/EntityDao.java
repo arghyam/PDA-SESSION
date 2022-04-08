@@ -4,6 +4,7 @@ import com.socion.session.dto.CleverTapEventData;
 import com.socion.session.dto.ResponseDTO;
 import com.socion.session.dto.TemplateDto;
 import com.socion.session.dto.v2.TopicDTO;
+// This change had to be done since the API using the DTO was broken and this is part of the fix.
 import com.socion.session.dto.v2.TopicIdsDTO;
 import com.socion.session.dto.v2.TopicInfo;
 import com.socion.session.dto.v2.TopicSessionLinkedDTO;
