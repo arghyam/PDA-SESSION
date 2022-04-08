@@ -32,7 +32,7 @@ public class AppContext {
 
     @Value("${aws-s3-bucket-name}")
     private String awsS3BucketName;
-
+// Incorrect configurable property name for AWS region which has been fixed.
     @Value("${aws-region}")
     private String awsS3Region;
 
@@ -87,7 +87,7 @@ public class AppContext {
 
     @Value("${keycloak-client-id}")
     private String clientId;
-
+// Adding keycloak client secret as a configurable property.
     @Value("${keycloak.credentials.secret}")
     private String clientSecret;
 
