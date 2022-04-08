@@ -41,6 +41,7 @@ public class UserServiceImpl implements UserService {
     public ResponseDTO getUserDetails(String userId, String loggedInUserId, boolean piiFilter) throws IOException {
 
         User user = null;
+        // Changed, since both the parameters in the method call were the same.
         Call<RegistryUserWithOsId> userRequest = iamDao.getUser(userId);
         retrofit2.Response userResponse = userRequest.execute();
         if (!userResponse.isSuccessful()) {
