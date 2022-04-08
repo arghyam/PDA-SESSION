@@ -12,6 +12,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.util.concurrent.TimeUnit;
+/* This is a temporary change since we haven’t enabled SSL for the backend services. 
+This change can be skipped if we have a valid hostname with a signed certificate for each backend service.*/
+
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 
