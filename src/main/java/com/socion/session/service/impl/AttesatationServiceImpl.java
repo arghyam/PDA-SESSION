@@ -1,5 +1,5 @@
 package com.socion.session.service.impl;
-
+// This change had to be done since the API using the DTO was broken and this is part of the fix.
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
