@@ -1,5 +1,5 @@
 FROM gradle:4.10.2-jdk8-alpine
-
+# This change includes adding the SSL certificate for keycloak to JAVA keystore in order to connect to keycloak.
 ENV KEYSTORE_PASS
 ADD ./src src
 ADD ./gradle/wrapper gradle/wrapper
