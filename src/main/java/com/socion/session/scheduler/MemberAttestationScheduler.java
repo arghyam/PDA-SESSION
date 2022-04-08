@@ -142,6 +142,7 @@ public class MemberAttestationScheduler {
             for (SessionRole role : sessionroles) {
                 Session session = sessionRepository.findByIds(role.getSession().getId());
                 try {
+                    // Changed, since both the parameters in the method call were same.
                     Call<RegistryUserWithOsId> userRequest = iamDao.getUser(role.getUserId());
                     retrofit2.Response<RegistryUserWithOsId> userResponse = userRequest.execute();
                     if (!userResponse.isSuccessful()) {
